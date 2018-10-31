@@ -11,7 +11,7 @@ EPOCH = 10
 BATCH_SIZE = 50
 LR = 0.001
 DOWNLOAD_MNIST = True
-if_use_gpu = 1
+if_use_gpu = 0
 
 training_data = torchvision.datasets.MNIST( root='./mnist/', train=True,  transform=torchvision.transforms.ToTensor(),  download=DOWNLOAD_MNIST, )
 
@@ -19,8 +19,8 @@ train_loader = Data.DataLoader(dataset=training_data, batch_size=BATCH_SIZE, shu
 
 test_data = torchvision.datasets.MNIST( root='./mnist/',  train=False,  transform=torchvision.transforms.ToTensor(), download=DOWNLOAD_MNIST, )
 
-test_x = Variable(torch.unsqueeze(test_data.data, dim=1).float(), requires_grad=False)
-test_y = test_data.targets
+test_x = Variable(torch.unsqueeze(test_data.test_data, dim=1).float(), requires_grad=False)
+test_y = test_data.test_labels
 
 class CNN(nn.Module):
     def __init__(self):
@@ -58,7 +58,7 @@ for epoch in range(EPOCH):
         loss.backward()
         optimizer.step()
         if step % 100 == 0:
-            print('Epoch:', epoch, '|Step:', step, '|train loss:%.4f' % loss.item())
+            print('Epoch:', epoch, '|Step:', step, '|train loss:%.4f' % loss.data[0])
 
     print(epoch)
 
